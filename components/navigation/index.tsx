@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useRouter } from 'next/router';
+
 // const pages = ['Events', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -36,6 +37,10 @@ function NavigationBar() {
   };
 
   const handleCloseUserMenu = (setting: string) => {
+    if(setting === 'Logout'){
+      router.push('/api/auth/logout')
+      return
+    }
     router.push(`/${setting.toLowerCase()}`)
     setAnchorElUser(null);
   };
@@ -131,11 +136,14 @@ function NavigationBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            {user && <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar src={user && user.picture || 'L'} />
               </IconButton>
-            </Tooltip>
+            </Tooltip> || 
+            <Button variant="text" sx={{color:'white'}} onClick={() => router.push('/api/auth/login')}>
+                Login
+            </Button>}
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
