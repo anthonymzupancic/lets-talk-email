@@ -10,7 +10,7 @@ interface Props {
     children: any
 }
 
-export const MainLayout = (props: Props) => {
+export const ProtectedLayout = (props: Props) => {
   const user = useUser();
   const router = useRouter();
 

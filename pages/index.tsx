@@ -51,7 +51,7 @@ export default function Home() {
           >
             <Typography
               variant="body1"
-              color="initial"
+              color="#ffffff"
               sx={{
                 fontSize: {
                   xs: 18,
@@ -99,7 +99,7 @@ export default function Home() {
           >
             <Typography
               variant="body1"
-              color="initial"
+              color="#ffffff"
               sx={{
                 fontSize: {
                   xs: 18,
@@ -128,7 +128,7 @@ export default function Home() {
           >
             <Typography
               variant="body1"
-              color="initial"
+              color="#ffffff"
               sx={{
                 fontSize: {
                   xs: 18,
