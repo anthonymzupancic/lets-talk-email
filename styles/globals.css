@@ -11,8 +11,29 @@ a {
   text-decoration: none;
 }
 
+.MuiTextField-root::after {
+  border-bottom: unset;
+}
+
+.MuiInputBase-root-MuiInput-root {
+  border-bottom: unset
+}
+
+.MuiInputBase-root-MuiInput-root::before {
+  border-bottom: unset
+}
+
+
+.MuiInputBase-root-MuiInput-root::after {
+  border-bottom: unset
+}
+
 * {
   box-sizing: border-box;
+}
+
+.MuiTextField-root {
+  color: white;
 }
 
 @media (prefers-color-scheme: dark) {
