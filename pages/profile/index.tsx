@@ -7,6 +7,8 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { PageHeader } from "../../components/display/header/PageHeader";
 import { TextInput } from "../../components/form/TextField";
 import { TextArea } from "../../components/form/TextArea";
+import axios from 'axios'
+
 export default function Profile() {
   const { user, error, isLoading } = useUser();
   const router = useRouter();
@@ -20,13 +22,13 @@ export default function Profile() {
     topicsTags: string | unknown;
     bio: string | unknown;
   }>({
-    name: null,
-    emailAddress: null,
-    twitterLink: null,
-    linkedInLink: null,
-    websiteLink: null,
-    topicsTags: null,
-    bio: null,
+    name: '',
+    emailAddress: '',
+    twitterLink: '',
+    linkedInLink: '',
+    websiteLink: '',
+    topicsTags: '',
+    bio: '',
   })
 
   if (isLoading) return <div>Loading...</div>;
@@ -37,7 +39,15 @@ export default function Profile() {
   }
 
 
-  const submitProfileUpdates = () => {}
+  const submitProfileUpdates = async () => {
+    if(!user || (user && !user.sub)) return 
+
+    const submitRequest = await axios.post(`/api/speaker/profile/${user.sub}/submit`, {
+      ...formData
+    })
+
+    console.log(submitRequest)
+  }
 
   return (
     <ProtectedLayout>
@@ -62,7 +72,13 @@ export default function Profile() {
               name={"name"}
               label={"Name"}
               onChange={(event) => {
-                
+                const value = event.currentTarget.value;
+                value && setFormData((prevState) => {
+                  return {
+                    ...prevState,
+                    name: value
+                  }
+                })
                 console.log(event.currentTarget.value);
               }}
             />
@@ -72,7 +88,13 @@ export default function Profile() {
               name={"emailAddress"}
               label={"Email Address"}
               onChange={(event) => {
-                
+                const value = event.currentTarget.value;
+                value && setFormData((prevState) => {
+                  return {
+                    ...prevState,
+                    emailAddress: value
+                  }
+                })
                 console.log(event.currentTarget.value);
               }}
             />
@@ -97,7 +119,13 @@ export default function Profile() {
               name={"twitterLink"}
               label={"Twitter Profile Link"}
               onChange={(event) => {
-                
+                const value = event.currentTarget.value;
+                value && setFormData((prevState) => {
+                  return {
+                    ...prevState,
+                    twitterLink: value
+                  }
+                })
                 console.log(event.currentTarget.value);
               }}
             />
@@ -107,8 +135,13 @@ export default function Profile() {
               name={"linkedInLink"}
               label={"LinkedIn Profile Link"}
               onChange={(event) => {
-                
-               
+                const value = event.currentTarget.value;
+                value && setFormData((prevState) => {
+                  return {
+                    ...prevState,
+                    linkedInLink: value
+                  }
+                })
                 console.log(event.currentTarget.value);
               }}
             />
@@ -133,6 +166,13 @@ export default function Profile() {
               name={"websiteLink"}
               label={"Personal Website/Blog Link"}
               onChange={(event) => {
+                const value = event.currentTarget.value;
+                value && setFormData((prevState) => {
+                  return {
+                    ...prevState,
+                    websiteLink: value
+                  }
+                })
                 console.log(event.currentTarget.value);
               }}
             />
@@ -143,6 +183,13 @@ export default function Profile() {
               label={"Content Topic Tags"}
               helperText={"Separate tags with a comma"}
               onChange={(event) => {
+                const value = event.currentTarget.value;
+                value && setFormData((prevState) => {
+                  return {
+                    ...prevState,
+                    topicsTags: value
+                  }
+                })
                 console.log(event.currentTarget.value);
               }}
             />
@@ -156,6 +203,13 @@ export default function Profile() {
             label={"Bio"}
             rows={5}
             onChange={(event) => {
+              const value = event.currentTarget.value;
+                value && setFormData((prevState) => {
+                  return {
+                    ...prevState,
+                    bio: value
+                  }
+                })
               console.log(event.currentTarget.value);
             }}
           />
@@ -178,6 +232,8 @@ export default function Profile() {
           </Button>
         </Grid>
       </Grid>
+
+      {JSON.stringify(formData)}
     </ProtectedLayout>
   );
 }
