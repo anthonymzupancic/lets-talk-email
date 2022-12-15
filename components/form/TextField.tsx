@@ -5,6 +5,7 @@ interface Props {
   label: string;
   name: string;
   helperText?: string;
+  value: string | undefined;
   variant?: "standard" | "outlined" | "filled";
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -17,6 +18,7 @@ export const TextInput = (props: Props) => {
       </Typography>
       <TextField
         id={props.name}
+        value={props.value}
         variant={props.variant || "standard"}
         fullWidth
         sx={{

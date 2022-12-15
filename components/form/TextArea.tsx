@@ -5,6 +5,7 @@ interface Props {
   label: string;
   name: string;
   rows: number;
+  value: string | undefined;
   variant?: "standard" | "outlined" | "filled";
   helperText?: string;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -18,6 +19,7 @@ export const TextArea = (props: Props) => {
       </Typography>
       <TextField
         id={props.name}
+        value={props.value}
         variant={props.variant || "standard"}
         fullWidth
         multiline
