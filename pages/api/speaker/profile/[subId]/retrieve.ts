@@ -25,7 +25,7 @@ export default async function handler(
       subId = req.query.subId;
     }   
     
-    const speakerRecordRequest = await db.getSpeakerRecord(subId)
+    const speakerRecordRequest = await db.getSpeakerRecord(subId, 'Main')
 
     res.status(200).json(speakerRecordRequest);
   } catch (err: any) {

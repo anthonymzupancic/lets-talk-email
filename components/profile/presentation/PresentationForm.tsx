@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import { TextArea } from "../../form/TextArea";
 import { TextInput } from "../../form/TextField";
 import axios from "axios";
+import { uuid } from "uuidv4";
 
 export const PresentationForm = (props: {
   presentationData:
@@ -91,10 +92,15 @@ export const PresentationForm = (props: {
   const handlePresentationSubmit = async () => {
     if (!user || (user && !user.sub)) return;
 
-    const submitRequest = await axios.post(
-      `/api/presentation//${user.sub}/new`,
-      {
+    const presentationData = {
         ...formData,
+        presentationId: uuid(),
+        sub: user.sub,
+    }
+    const submitRequest = await axios.post(
+      `/api/presentation/user/${user.sub}/new`,
+      {
+        ...presentationData
       }
     );
   };
@@ -236,6 +242,10 @@ export const PresentationForm = (props: {
           }}
         >
           <Grid item xs={12} md={5}>
+            <Typography variant={'button'}
+            >
+                Presentation Status
+            </Typography>
             <FormControl variant={'standard'} fullWidth >
               <Select
                 labelId="demo-simple-select-label"
@@ -287,62 +297,7 @@ export const PresentationForm = (props: {
           </Grid>
         </Grid>
       </Grid>
-      {/* <Grid
-        container
-        sx={{
-          justifyContent: "center",
-        }}
-      >
-        <Grid
-          item
-          xs={10}
-          sx={{
-            display: {
-              xs: "block",
-              md: "flex",
-            },
-            justifyContent: "space-between",
-          }}
-        >
-          <Grid item xs={12} md={5}>
-            <TextInput
-              name={"websiteLink"}
-              value={formData.websiteLink}
-              label={"Personal Website/Blog Link"}
-              onChange={(event) => {
-                const value = event.currentTarget.value;
-                value &&
-                  setFormData((prevState) => {
-                    return {
-                      ...prevState,
-                      websiteLink: value,
-                    };
-                  });
-              }}
-            />
-          </Grid>
-          <Grid item xs={12} md={5}>
-            <TextInput
-              name={"topicsTags"}
-              value={formData.topicsTags}
-              label={"Content Topic Tags"}
-              helperText={"Separate tags with a comma"}
-              onChange={(event) => {
-                const value = event.currentTarget.value;
-                value &&
-                  setFormData((prevState) => {
-                    return {
-                      ...prevState,
-                      topicsTags: value,
-                    };
-                  });
-              }}
-            />
-          </Grid>
-        </Grid>
-      </Grid> */}
-
-      <Grid container marginBottom={4}>
+      <Grid container paddingY={4}>
         <Grid
           item
           xs={11}

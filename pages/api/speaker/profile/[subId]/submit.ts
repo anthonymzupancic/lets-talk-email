@@ -26,7 +26,7 @@ export default async function handler(
       subId = req.query.subId;
     }   
     
-    const writeRecordRequest = await db.writeNewSpeakerRecord(subId, request)
+    const writeRecordRequest = await db.writeNewSpeakerRecord(subId, request, 'Main')
     const output = {
       status: 'ok'
     }

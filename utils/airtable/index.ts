@@ -8,43 +8,65 @@ Airtable.configure({
 });
 
 const base = Airtable.base("appuULVkcWSPfrGuG");
-const table = base("Main");
 
 export class AirtableDB {
-  getData = async (subId: string) => {
-    const records = await table
+  getData = async (value: string, key: string, table: string) => {
+    const tableRef = base(table);
+    const records = await tableRef
       .select({
-        filterByFormula: `{sub} = "${subId}"`,
+        filterByFormula: `{${key}} = "${value}"`,
       })
       .all();
 
-    console.log(records)
     return {
       id: records[0].getId(),
       fields: records[0].fields,
     };
   };
 
-  getSpeakerRecord = async (subId: string):Promise<void | {
+  getSpeakerRecord = async (
+    subId: string,
+    table: string
+  ): Promise<void | {
     id: string;
-    fields: any
+    fields: any;
   }> => {
     try {
-      const speaker = await this.getData(subId);
+      const speaker = await this.getData(subId, 'sub', table);
       return speaker;
     } catch (err: any) {
       return err;
     }
   };
 
-  writeNewSpeakerRecord = async (subId: string, request: SpeakerRecord) => {
+  getPresentationRecord = async (
+    presentationId: string,
+    table: string
+  ): Promise<void | {
+    id: string;
+    fields: any;
+  }> => {
+    try {
+      const speaker = await this.getData(presentationId, 'presentationId', table);
+      return speaker;
+    } catch (err: any) {
+      return err;
+    }
+  };
+
+  writeNewSpeakerRecord = async (
+    subId: string,
+    request: SpeakerRecord,
+    table: string
+  ) => {
     try {
       if (!subId) {
         throw new Error("sub required");
       }
-      const speaker = await this.getSpeakerRecord(subId);
+      const tableRef = base(table);
+      const speaker = await this.getSpeakerRecord(subId, table);
       if (speaker && speaker.id) {
-        base("Main").update(
+        await tableRef.update(
           speaker.id,
           {
             ...request,
@@ -57,10 +79,62 @@ export class AirtableDB {
           }
         );
       } else {
-        base("Main").create(
+        await tableRef.create(
           {
             ...request,
             sub: subId,
+          },
+          { typecast: true },
+          function (err, record) {
+            if (err) {
+              console.error(err);
+              return {
+                status: "error",
+              };
+            }
+
+            if (record) {
+              return {
+                status: "ok",
+              };
+            }
+          }
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  writeRecord = async (
+    recordId: string,
+    request: SpeakerRecord,
+    table: string
+  ) => {
+    try {
+      if (!recordId) {
+        throw new Error("recordId required");
+      }
+      const tableRef = base(table);
+      const presentation = await this.getPresentationRecord(recordId, table);
+      if (presentation && presentation.id) {
+        await tableRef.update(
+          presentation.id,
+          {
+            ...request,
+          },
+          (err, record) => {
+            if (err) {
+              console.error(err);
+              return;
+            }
+          }
+        );
+      } else {
+        await tableRef.create(
+          {
+            ...request,
+            sub: request.sub,
           },
           { typecast: true },
           function (err, record) {
