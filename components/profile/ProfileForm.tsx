@@ -1,7 +1,7 @@
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Grid, Button } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextArea } from "../form/TextArea";
 import { TextInput } from "../form/TextField";
 import axios from "axios";
@@ -36,42 +36,29 @@ export const ProfileForm = (props: {
     topicsTags: string | undefined;
     bio: string | undefined;
   }>({
-    name:
-      (props.profileData &&
-        props.profileData.fields &&
-        props.profileData.fields.name) ||
-      "",
-    emailAddress:
-      (props.profileData &&
-        props.profileData.fields &&
-        props.profileData.fields.emailAddress) ||
-      "",
-    twitterLink:
-      (props.profileData &&
-        props.profileData.fields &&
-        props.profileData.fields.twitterLink) ||
-      "",
-    linkedInLink:
-      (props.profileData &&
-        props.profileData.fields &&
-        props.profileData.fields.linkedInLink) ||
-      "",
-    websiteLink:
-      (props.profileData &&
-        props.profileData.fields &&
-        props.profileData.fields.websiteLink) ||
-      "",
-    topicsTags:
-      (props.profileData &&
-        props.profileData.fields &&
-        props.profileData.fields.topicsTags) ||
-      "",
-    bio:
-      (props.profileData &&
-        props.profileData.fields &&
-        props.profileData.fields.bio) ||
-      "",
+    name: "",
+    emailAddress: "",
+    twitterLink: "",
+    linkedInLink: "",
+    websiteLink: "",
+    topicsTags: "",
+    bio: "",
   });
+
+  useEffect(() => {
+    if (!props.profileData) return;
+
+    props.profileData.fields &&
+      setFormData({
+        name: props.profileData.fields.name,
+        emailAddress: props.profileData.fields.emailAddress,
+        twitterLink: props.profileData.fields.twitterLink,
+        linkedInLink: props.profileData.fields.linkedInLink,
+        websiteLink: props.profileData.fields.websiteLink,
+        topicsTags: props.profileData.fields.topicsTags,
+        bio: props.profileData.fields.bio,
+      });
+  }, [props.profileData]);
 
   const submitProfileUpdates = async () => {
     if (!user || (user && !user.sub)) return;
@@ -82,7 +69,6 @@ export const ProfileForm = (props: {
         ...formData,
       }
     );
-
   };
 
   return (
@@ -273,12 +259,16 @@ export const ProfileForm = (props: {
         </Grid>
       </Grid>
       <Grid container marginBottom={4}>
-        <Grid item xs={11} sx={{
-          textAlign: {
-            xs: 'center',
-            md: 'right'
-          }
-        }}>
+        <Grid
+          item
+          xs={11}
+          sx={{
+            textAlign: {
+              xs: "center",
+              md: "right",
+            },
+          }}
+        >
           <Button
             variant="contained"
             color="info"

@@ -5,6 +5,10 @@ import {
   Checkbox,
   Typography,
   FormControlLabel,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -232,21 +236,32 @@ export const PresentationForm = (props: {
           }}
         >
           <Grid item xs={12} md={5}>
-            <TextInput
-              name={"status"}
-              value={formData.status}
-              label={"Presentation Status"}
-              onChange={(event) => {
-                const value = event.currentTarget.value;
-                value &&
-                  setFormData((prevState) => {
-                    return {
-                      ...prevState,
-                      slideDeckLink: value,
-                    };
-                  });
-              }}
-            />
+            <FormControl variant={'standard'} fullWidth >
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                sx={{
+                    backgroundColor: 'white',
+                    color: 'black',
+                    paddingX: 2
+                }}
+            
+                value={formData.status}
+                onChange={(event) => {
+                    const value = event.target.value;
+                    setFormData((prevState) => {
+                        return {
+                          ...prevState,
+                          status: value,
+                        };
+                      });
+                }}
+              >
+                <MenuItem value={'active'}>Active</MenuItem>
+                <MenuItem value={'inactive'}>Inactive</MenuItem>
+                <MenuItem value={'in_progress'}>In Progress</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12} md={5}>
             <Checkbox
@@ -256,16 +271,16 @@ export const PresentationForm = (props: {
                   color: "white",
                 },
               }}
+              checked={formData.showPresentation ? true : false}
               onChange={(event) => {
                 const value = event.target.checked;
-                console.log(value)
-                value &&
-                  setFormData((prevState) => {
-                    return {
-                      ...prevState,
-                      showPresentation: value,
-                    };
-                  });
+                console.log(value);
+                setFormData((prevState) => {
+                  return {
+                    ...prevState,
+                    showPresentation: value,
+                  };
+                });
               }}
             />{" "}
             Presentation Visible
